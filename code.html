@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Calculator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/styles/monokai-sublime.min.css">
+
+    
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+    <!-- CREATE A NAV BAR LOGO, TEXT AND MENU TO THE RIGHT WHICH TAKES SCREEN FULL WIDTH -->
+    <!-- MENU = HOME/ APP/ CODE/ REPO/ ABOUT/ BLOG -->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">
+                
+                <h3><sup><img src="pics/home_cyan.png" alt=""></sup> Finance Builder</h3>
+                
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown" aria-controls="navDropdown" aria-expanded="false" aria-label="Toggle Navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navDropdown">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link text-white">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="app.html" class="nav-link text-white">App</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="code.html" class="nav-link text-white">Code</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="repo.html" class="nav-link text-white">Repo</a>
+                    </li>                 
+                    <li class="nav-item">
+                        <a href="https://goliathcode.com" target="_blank" class="nav-link text-white">Blog</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- CREATE A CONTAINER -->
+    <div class="container mt-7">
+        <div class="container-fluid d-flex justify-content-center">
+            <p class="display-3 mt-5">Finance Builder</p>
+        </div>
+        <div class="row">
+            <!-- COL 1...CALCULATOR LOAN AMMOUNT/ TREM (MONTHS)/ INTEREST RATE %/ CALCULATE BUTTON -->
+            <div class="col-8">
+                <!-- Add code block with Prism.js classes -->
+                <pre>
+                    <code class="language-javascript">
+                        
+                        // BUTTONS
+                        const calculateBtn = document.getElementById("calculate-button");
+                        // INPUTS
+                        const principalInput = document.getElementById("principal-id");
+                        const termInput = document.getElementById("term-id");
+                        const interestInput = document.getElementById("interest-id");
+                        // DISPLAYED PRICES
+                        const principalDisplay = document.getElementById("principal-display");
+                        const interestRateDisplay = document.getElementById("interest-rate-display");
+                        const termDisplay = document.getElementById("term-display");
+                        const interestDisplay = document.getElementById("interest-display"); 
+                        const costDisplay = document.getElementById("total-cost-display");
+                        const monthlyDisplay = document.getElementById("monthly-payment-display");
+                        // TABLE ROWS
+                        const tableBody = document.getElementById("table-body");
+
+
+
+                        // CALCULATE THE MATH FOR MORTAGE OUTPUTS AND TABLE
+                        function calculateMortgage(e) {
+                            e.preventDefault();
+                            clearTable();
+                            // Principal
+                            const P = principalInput.value;
+                            // Annual interest rate percentage
+                            const annualInterestRate = interestInput.value;
+                            // Convert annual interest rate to monthly rate
+                            const r = (annualInterestRate / 12) / 100;
+                            // Term length in months
+                            const n = termInput.value * 12;
+
+                            // Calculate total monthly payment
+                            const numerator = P * r * Math.pow(1 + r, n);
+                            const denominator = Math.pow(1 + r, n) - 1;
+                            const M = numerator / denominator;
+
+                            // Calculate total interest paid
+                            const totalInterest = M * n - P;
+
+                            const addedInterest = parseFloat(totalInterest) + parseFloat(P);
+                            
+                            displayOutputs(n,  annualInterestRate, P, totalInterest, addedInterest, M);
+
+                            calculateMonthlyPayments(totalInterest.toFixed(2), (addedInterest).toFixed(2), n, M);
+                        }
+
+
+                        // CALCULATE HOW MUCH PER MONTH THAT THE MORGAGE WILL COST INCLUDING INTEREST
+                        function calculateMonthlyPayments(interestCost, totalCost, months, monthlyBill) {    
+                            // TOTAL INTEREST PER MONTH
+                            const monthlyInterest = parseFloat(interestCost) / months;
+                            // TOTAT PRINCIPAL PER MONTH MINUS INTEREST
+                            const monthlyPrincipal =  parseFloat(totalCost) / months - monthlyInterest;
+                            // HOW MANY MONTHS
+                            const month = months;
+                            // TOTAL MONTHLY PAYMENT
+                            const monthlyPayment = parseFloat(monthlyBill);  
+                            //
+                            const longTermCost = parseFloat(totalCost);
+                            
+                            //               Monthly Payment Total   Interest Total     no Interest Cost
+                            tableRows(month, monthlyPayment, monthlyInterest,  monthlyPrincipal, longTermCost);
+
+                            
+                        }
+
+
+                        // POPULATES THE MAIN DISPLAY NUMBERS
+                        function displayOutputs(months, annualRate, principal, interestValue, interestTotal, monthlyPayment) {
+                            //  months 
+                            termDisplay.textContent = `${months}`;
+                            // annual %
+                            interestRateDisplay.textContent = `${annualRate}%`;
+                            // Base principal
+                            principalDisplay.textContent = `€ ${parseFloat(principal).toLocaleString()}`;    
+                            // added interest
+                            interestDisplay.textContent = `€ ${parseFloat(interestValue.toFixed(2)).toLocaleString()}`;// `€${totalInterest.toFixed(2)}`
+                            // total cost
+                            costDisplay.textContent = `€ ${parseFloat(interestTotal.toFixed(2)).toLocaleString()}`;
+                            // Monthly Payments
+                            monthlyDisplay.textContent = `€ ${parseFloat(monthlyPayment.toFixed(2)).toLocaleString()}`;  
+                        }
+
+
+                        // POPULATES THE TABLE BELOW THE MAIN DISPLAY
+                        //                          Monthly Payment Total   Interest Total     no Interest Cost
+                        function tableRows(months, monthlyPayment, monthlyInterest, monthlyPrincipal,  longTermCost) {
+                            let accummulatedInterest = 0;
+                            let balanceReduction = longTermCost;
+
+                            console.log("Monthly Payment Total: €", parseFloat(monthlyPayment.toFixed(2)).toLocaleString());
+                            console.log("Monthly Interest Total: €", parseFloat(monthlyInterest.toFixed(2)).toLocaleString());
+                            console.log("Monthly Cost Total: €", parseFloat(monthlyPrincipal.toFixed(2)).toLocaleString());
+
+                            for (let i = 1; i <= months; i++) {
+                                accummulatedInterest += monthlyInterest;
+                                balanceReduction -= monthlyPrincipal;
+                                
+                                // CREATING THE ROW
+                                const tableRow = document.createElement("tr");
+
+                                // ROW NUMBER FOR EACH MONTH
+                                const rowNumber = document.createElement("th");
+                                rowNumber.classList.add("text-center");
+                                rowNumber.setAttribute("scope", "row");
+                                rowNumber.textContent = i;
+
+                                // AMOUNT PAID PER MONTH TOTAL
+                                const paymentCell = document.createElement("td");
+                                paymentCell.classList.add("text-center");
+                                paymentCell.textContent = `€${parseFloat(monthlyPayment.toFixed(2)).toLocaleString()}`;
+
+                                // AMOUNT PAID OFF LOAN MINUS THE INTEREST
+                                const principalCell = document.createElement("td");
+                                principalCell.classList.add("text-center");
+                                principalCell.textContent =`€${parseFloat(monthlyPrincipal.toFixed(2)).toLocaleString()}`;
+
+                                // INTEREST AMOUNT PAID PER MONTH
+                                const interestCell = document.createElement("td");
+                                interestCell.classList.add("text-center");
+                                interestCell.textContent =`€${parseFloat(monthlyInterest.toFixed(2)).toLocaleString()}`;
+
+                                // ADDING UP TOTAL INTEREST PAID MONTH BY MONTH
+                                const totalInterestCell = document.createElement("td");
+                                totalInterestCell.classList.add("text-center");
+                                totalInterestCell.textContent =`€${parseFloat(accummulatedInterest.toFixed(2)).toLocaleString()}`;
+
+                                // REMOVING MONTHLY PAYMENT FROM LOAN BALANCE
+                                const balanceCell = document.createElement("td");
+                                balanceCell.classList.add("text-center");
+                                balanceCell.textContent =`€${parseFloat(balanceReduction.toFixed(2)).toLocaleString()}`;
+
+                                tableRow.append(rowNumber, paymentCell, principalCell, interestCell, totalInterestCell, balanceCell);
+                                tableBody.appendChild(tableRow);
+                            }
+                            principalInput.value = "";
+                            termInput.value = "";
+                            interestInput.value = "";   
+                            
+                        }
+
+
+                        // SIMPLE FUNCTION THAT CLEARS THE TABLE TO ALLOW SPACE FOR THE NEXT CALCULATION ON SUBMITION OF FORM
+                        function clearTable() {
+                            tableBody.textContent = "";
+                            
+                        }
+
+                        calculateBtn.<span class="limeText">addEventListener</span>("click", calculateMortgage);
+
+                    
+                        
+                    </code>
+                </pre>
+                
+            </div>
+
+            <!-- COL 2...LARGER TEXT DISPLAY FOR MONTHLY PAYMENT AMOUNTS -->
+            <div class="col-4 text-center d-flex">
+                <pre>
+                    <code class="language-javascript line-numbers">
+                      function greet() {
+                          console.log("Hello, world!");
+                      }
+                    </code>
+                  </pre>
+                  
+                    
+            </div>
+               
+                
+                
+                
+            </div>
+        </div>
+        
+
+
+    </div>
+
+   
+
+    <!-- ADD A FOOTER WITH COPYRIGHT MARKER/ NAME-LOGO/ SOCIAL LINKS -->
+    <div class="container-fluid fixed-bottom bg-dark text-white">
+        <div class="container d-flex py-4 justify-content-center">
+            <!-- COPYRIGHT -->
+            <div class="col-4">
+                <p>Goliath Code &copy; 2023</p>
+            </div>
+            <!-- NAME OR LOGO -->
+            <div class="col-4 d-flex justify-content-center">
+                <p>Stephen Farrell</p>
+            </div>
+            <!-- SOCIAL LOGOS -->
+            <div class="col-4 d-flex justify-content-end">                
+                <i class="fa-brands mx-2 fa-2x fa-linkedin" style="color: #ffffff;"></i>
+                <i class="fa-brands mx-2 fa-2x fa-github" style="color: #ffffff;"></i>
+            </div>
+            
+
+            
+
+            
+        </div>
+        
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/highlight.min.js"></script>
+    <!-- and it's easy to individually load additional languages -->
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/languages/go.min.js"></script>
+
+    <script type="module">
+        import hljs from 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/es/highlight.min.js';
+        //  and it's easy to individually load additional languages
+        import go from 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/es/languages/go.min.js';
+        hljs.registerLanguage('go', go);
+        </script>
+
+    <script src="js/script.js"></script>
+    
+
+    
+</body>
+</html>

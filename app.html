@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Calculator</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <!-- CREATE A NAV BAR LOGO, TEXT AND MENU TO THE RIGHT WHICH TAKES SCREEN FULL WIDTH -->
+    <!-- MENU = HOME/ APP/ CODE/ REPO/ ABOUT/ BLOG -->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">
+                
+                <h3><sup><img src="pics/home_cyan.png" alt=""></sup> Finance Builder Mortgage Calculator</h3>
+                
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navDropdown" aria-controls="navDropdown" aria-expanded="false" aria-label="Toggle Navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navDropdown">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link text-white">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="app.html" class="nav-link text-white">Mortgage</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="https://goliathcode.com/mortage-calculator-javascript-code-review/" target="_blank" class="nav-link text-white">Code</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="https://github.com/Goliath-Code/Mortgage_Calculator#mortgage_calculator" target="_blank" class="nav-link text-white">Repo</a>
+                    </li>                 
+                    <li class="nav-item">
+                        <a href="https://goliathcode.com" target="_blank" class="nav-link text-white">Blog</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </nav>
+
+<section class="mortgage-section">
+
+    <!-- CREATE A CONTAINER -->
+    <div class="container-fluid col-12 col-md-10 offset-md-1 offset-lg-0 col-lg-12 col-xxl-12  offset-xxl-0 col-xxxl-6 offset-xxxl-3 mt-7">
+        <!-- CREATE 3 COLUMNS IN A ROW -->
+        <div class="row">
+            <!-- COL 1...CALCULATOR LOAN AMMOUNT/ TREM (MONTHS)/ INTEREST RATE %/ CALCULATE BUTTON -->
+            <div class="col-lg-4 ">
+                <form class="offset-1" action="">
+                    <label for="principal-id" class="col-10 mt-4">Loan Amount (euro's)</label>
+                    <input id="principal-id" class="col-10 mb-2" type="number" required>
+
+                    <label for="term-id" class="col-10 mt-4">Term (Years)</label>
+                    <input id="term-id" class="col-10 mb-2" type="number">
+
+                    <label for="interest-id" class="col-10 mt-4">Interest Rate (%)</label>
+                    <input id="interest-id" class="col-10 mb-2" type="number" step="0.01">
+
+                    <button id="calculate-button" class="btn col-10 btn-primary mt-4">Calculate</button>
+                </form>
+            </div>
+
+            <!-- COL 2...LARGER TEXT DISPLAY FOR MONTHLY PAYMENT AMOUNTS -->
+            <div class="col-lg-4 col-12 text-center">
+                <h1 class="mt-5">Monthly Payments</h1>
+                <!-- Monthly Payments -->
+                <h2 id="monthly-payment-display" class="my-4 display-6">€ 0</h2>
+                
+            </div>
+
+            
+            <!-- COL 3...DISPLAY FOR PRINCIPAL/ INTEREST/ COST TOTALS -->
+            <div class="col-lg-4 col-12 d-flex">
+                <!-- TOTAL TITLES -->
+                <div class="col-md-5 col-6 offset-1">
+                    <!-- months -->
+                    <h4 class="mt-4">Term <span class="fs-5">(Months)</span></h4>
+                    <!-- annual % -->
+                    <h4 class="mt-4">Annual Rate</h4>
+                    <!-- Base principal -->
+                    <h4 class="mt-4">Principal</h4>       
+                    <!-- added interest -->
+                    <h4 class="mt-4">Interest</h4>
+                    <!-- total cost -->
+                    <h4 class="mt-4">Total</h4>
+
+                </div>
+
+                <!-- TOTAL READOUTS -->
+                <div class="col-lg-6 col-6">
+                    <!-- months -->  
+                    <h4 id="term-display" class="mt-4 fw-normal customLeftMargin">0</h4>
+                    <!-- annual % -->
+                    <h4 id="interest-rate-display" class="mt-4 fw-normal customLeftMargin">0%</h4>
+                    <!-- Base principal -->
+                    <h4 id="principal-display" class="mt-4 fw-normal">€ 0</h4>     
+                    <!-- added interest -->
+                    <h4 id="interest-display" class="mt-4 fw-normal">€ 0</h4>
+                    <!-- total cost -->
+                    <h4 id="total-cost-display" class="mt-4 fw-normal">€ 0</h4>
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+
+    </div>
+
+    <!-- CREATE CONTAINER FOR HEADING OF TABLES AND TABLE BREAK DOWN FOR EACH MONTH -->
+    <div class="container-fluid col-lg-12 col-12 offset-lg-0  col-12 col-xxl-12  offset-xxl-0 col-xxxl-6 offset-xxxl-3 mt-4 mb-8">
+        
+
+        
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="bg-dark text-white text-center" scope="col">Month</th>
+                        <th class="bg-dark text-white text-center" scope="col">Payment</th>
+                        <th class="bg-dark text-white text-center" scope="col">Principal</th>
+                        <th class="bg-dark text-white text-center" scope="col">Interest</th>
+                        <th class="bg-dark text-white text-center" scope="col">Total Interest</th>
+                        <th class="bg-dark text-white text-center" scope="col">Balance</th>
+                    </tr>
+                </thead>
+                
+                
+                <tbody id="table-body">
+                
+                </tbody>
+            </table>
+        
+    </div>
+
+</section>
+
+    <!-- ADD A FOOTER WITH COPYRIGHT MARKER/ NAME-LOGO/ SOCIAL LINKS -->
+    <footer class="container-fluid mt-4 bg-dark text-white">
+        <div class="container d-flex py-4 justify-content-center">
+            <!-- COPYRIGHT -->
+            <div class="col-4">
+                <p>Goliath Code &copy; 2023</p>
+            </div>
+            <!-- NAME OR LOGO -->
+            <div class="col-4 d-flex ">
+                <p class="firstname-sign fw-bold text-shadow">Stephen </p> 
+                <p class="lastname-sign fw-bold text-shadow"> Farrell</p>
+            </div>
+            <!-- SOCIAL LOGOS -->
+            <div class="col-4 d-flex justify-content-end">                
+                <a href="https://www.linkedin.com/in/ste-f-b7947a288/" target="_blank"><i class="fa-brands mx-2 fa-2x fa-linkedin" style="color: #ffffff;"></i></a>
+                <a href="https://github.com/Goliath-Code" target="_blank"><i class="fa-brands mx-2 fa-2x fa-github" style="color: #ffffff;"></i></a>
+            </div>
+                        
+        </div>
+        
+    </footer>
+
+
+
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="js/script.js"></script>
+
+    
+</body>
+</html>
